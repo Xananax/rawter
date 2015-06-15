@@ -1,13 +1,13 @@
 {
-  "name": "Rawt",
+  "name": "rawt",
   "version": "0.1.0",
   "description": "A different take on routers",
   "scripts": {
-    "babel-node": "./node_modules/.bin/babel-node",
+    "babel-node": "babel-node",
     "start": "DEBUG=*,-express:*,-babel*,-send ./node_modules/.bin/nodemon --exec npm run babel-node -- ./app/server",
-    "test": "./node_modules/.bin/mocha --recursive -R spec --compilers js:babel/register",
-    "testWatch": "./node_modules/.bin/mocha --recursive --watch -R spec --compilers js:babel/register",
-    "compile":"babel index.js dist/rawter.js"
+    "test": "mocha --recursive -R spec --compilers js:babel/register",
+    "testWatch": "mocha --recursive --watch -R spec --compilers js:babel/register",
+    "compile": "babel index.js dist/rawter.js"
   },
   "author": "xananax@yelostudio.com",
   "license": "MIT",
@@ -21,5 +21,26 @@
   },
   "engines": {
     "node": "0.12.0"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xananax/rawter.git"
+  },
+  "keywords": [
+    "router",
+    "express",
+    "connect",
+    "api"
+  ],
+  "bugs": {
+    "url": "https://github.com/Xananax/rawter/issues"
+  },
+  "homepage": "https://github.com/Xananax/rawter#readme"
 }
