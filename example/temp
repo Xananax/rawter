@@ -1,0 +1,81 @@
+import makeTest from './makeTest';
+import makeRoute from './makeRoute';
+import splitUrl from './splitUrl';
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function isEmpty(obj) {
+	if (obj == null) return true;
+	if (obj.length > 0)    return false;
+	if (obj.length === 0)  return true;
+	for (var key in obj) {
+		if (hasOwnProperty.call(obj, key)){return false};
+	}
+	return true;
+}
+
+function makeShowEndPoints(routes){
+	return function showEndPoints(path){
+		path = splitUrl(path);
+		let left = [];
+		if(!path.length){return routes;}
+		let obj = routes;
+		while(path.length){
+			let p = path.shift();
+			left.push(p);
+			if(obj.hasOwnProperty(p)){
+				obj = obj[p];
+				continue;
+			}
+		}
+		obj = prettyPrintEndPoints(obj);
+		return {
+			path:left
+		,	endPoints:obj
+		};
+	}
+}
+
+function prettyPrintEndPoints(obj){
+	for(let n in obj){
+		if(isEmpty(obj[n])){
+			obj[n] = '/';
+		}else{
+			obj[n] = prettyPrintEndPoints(obj[n]);
+		}
+	}
+	return obj;
+}
+
+function Router(){
+	let path = [];
+	let endPoints = [];
+	function Route(...routes){
+		let chunk,test,testType;
+		if(typeof routes[0] === 'string' || routes[0] instanceof RegExp){
+			chunk = routes.shift();
+			test = makeTest(chunk,testType);
+		}
+		let l = routes.length;
+		let i = 0;
+		let oldPath = path.slice();
+		if(chunk){
+			path.push(chunk);
+			endPoints.push(path.slice())
+		}
+		for(i;i<l;i++){
+			let route = routes[i];
+			if(Array.isArray(route)){
+				routes[i] = Route(...route);
+			}
+		}
+		path = oldPath
+		//nesting = oldNesting;
+		return makeRoute(routes,test,l);
+	}
+	Route.endPoints = endPoints;
+	//Route.showEndPoints = makeShowEndPoints(endPoints);
+	return Route;
+}
+
+
+export default Router;
